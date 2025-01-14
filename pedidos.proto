@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+service PedidosService {
+  rpc CriaPedido (ListaDeItens) returns (ListaDeStatus);
+  rpc CancelaPedido (PedidoId) returns (Status);
+  rpc FimDaExecucao (Empty) returns (FimExecucaoStatus);
+}
+
+message ListaDeItens {
+  repeated Item itens = 1;
+}
+
+message Item {
+  int32 prod_id = 1;
+  int32 quantidade = 2;
+}
+
+message PedidoId {
+  int32 id = 1;
+}
+
+message ListaDeStatus {
+  repeated StatusStatus status = 1;
+}
+
+message StatusStatus {
+  int32 prod_id = 1;
+  int32 status = 2;
+}
+
+message FimExecucaoStatus {
+  int32 estoque_status = 1;
+  int32 pedidos_ativos = 2;
+}
+
+message Status {
+  int32 status = 1;
+}
+
+message Empty {}

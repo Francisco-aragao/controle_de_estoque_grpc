@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+service EstoqueService {
+  rpc AdicionaProduto (ProdutoRequest) returns (ProdutoId);
+  rpc AlteraQuantidadeDeProduto (AlteraQuantidadeRequest) returns (Status);
+  rpc ListaProdutos (Empty) returns (ListaDeProdutos);
+  rpc FimDaExecucao (Empty) returns (Status);
+}
+
+message ProdutoRequest {
+  string descricao = 1;
+  int32 quantidade = 2;
+}
+
+message ProdutoId {
+  int32 id = 1;
+}
+
+message AlteraQuantidadeRequest {
+  int32 prod_id = 1;
+  int32 valor = 2;
+}
+
+message Status {
+  int32 status = 1;
+}
+
+message Produto {
+  int32 id = 1;
+  string descricao = 2;
+  int32 quantidade = 3;
+}
+
+message ListaDeProdutos {
+  repeated Produto produtos = 1;
+}
+
+message Empty {}
