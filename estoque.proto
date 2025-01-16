@@ -3,13 +3,13 @@ syntax = "proto3";
 service EstoqueService {
   rpc AdicionaProduto (ProdutoRequest) returns (ProdutoId);
   rpc AlteraQuantidadeDeProduto (AlteraQuantidadeRequest) returns (Status);
-  rpc ListaProdutos (Empty) returns (ListaDeProdutos);
-  rpc FimDaExecucao (Empty) returns (Status);
+  rpc ListaProdutos (EmptyRequest) returns (ListaDeProdutos);
+  rpc FimDaExecucao (EmptyRequest) returns (Status);
 }
 
 message ProdutoRequest {
-  string descricao = 1;
-  int32 quantidade = 2;
+  int32 quantidade = 1;
+  string descricao = 2;
 }
 
 message ProdutoId {
@@ -35,4 +35,4 @@ message ListaDeProdutos {
   repeated Produto produtos = 1;
 }
 
-message Empty {}
+message EmptyRequest {}

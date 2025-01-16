@@ -1,20 +1,33 @@
 clean:
-    rm -f *.pyc
-    rm -f *_pb2.py
-    rm -f *_pb2_grpc.py
+	rm -f pedidos_pb2.py
+	rm -f pedidos_pb2_grpc.py
+	rm -f estoque_pb2.py
+	rm -f estoque_pb2_grpc.py
 
-stubs:
-    python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. estoque.proto
-    python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. pedidos.proto
+# usando @ so pra não exibir o comando na tela
 
-run_serv_estoque:
-    python3 service_estoque.py $(arg1)
+stub_estoque:
+	@if [ ! -f "estoque_pb2.py" ] || [ ! -f "estoque_pb2_grpc.py" ]; then \
+	python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. estoque.proto; \
+	fi
 
-run_cli_estoque:
-    python3 client_estoque.py $(arg1)
+# Definindo a regra para gerar os stubs de pedidos
+stub_pedidos:
+	@if [ ! -f "pedidos_pb2.py" ] || [ ! -f "pedidos_pb2_grpc.py" ]; then \
+        python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. pedidos.proto; \
+	fi
 
-run_serv_pedidos:
-    python3 service_pedidos.py $(arg1) $(arg2)
+# Regras para gerar todos os stubs
+stubs: stub_estoque stub_pedidos
 
-run_cli_pedidos:
-    python3 client_pedidos.py $(arg1) $(arg2)
+run_serv_estoque: stubs
+	python3 service_estoque.py $(arg1)
+
+run_cli_estoque: stubs
+	python3 client_estoque.py $(arg1)
+
+run_serv_pedidos: stubs
+	python3 service_pedidos.py $(arg1) $(arg2)
+
+run_cli_pedidos: stubs
+	python3 client_pedidos.py $(arg1) $(arg2)
