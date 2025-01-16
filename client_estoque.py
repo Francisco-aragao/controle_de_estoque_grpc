@@ -18,7 +18,7 @@ def ListaProdutos(stub):
     lista = stub.ListaProdutos(estoque_pb2.EmptyRequest())
 
     for produto in lista.produtos:
-        print(f'{produto.id} - {produto.descricao} - {produto.quantidade}')
+        print(f'{produto.id} {produto.descricao} {produto.quantidade}')
 
 def FimDaExecucao(stub):
     status = stub.FimDaExecucao(estoque_pb2.EmptyRequest())
@@ -33,7 +33,9 @@ def processa_comandos(stub):
             continue
         operacao, *args = line.strip().split()
         if operacao == 'P':
-            AdicionaProduto(stub, int(args[0]), args[1])
+            # recebendo a descrição que pode conter espaços
+            descricao = ' '.join(args[1:])
+            AdicionaProduto(stub, int(args[0]), descricao)
         elif operacao == 'Q':
             AlteraQuantidadeDeProduto(stub, int(args[0]), int(args[1]))
         elif operacao == 'L':
@@ -42,7 +44,7 @@ def processa_comandos(stub):
             FimDaExecucao(stub)
             break
 
-def run():
+def client_estoque():
     _, servidor = sys.argv
 
     channel = grpc.insecure_channel(servidor)
@@ -54,4 +56,4 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    client_estoque()
