@@ -12,16 +12,12 @@ class Produto:
         self.descricao = descricao
         self.quantidade = quantidade
 
-    def __str__(self):
-        return f'{self.id} - {self.descricao} - {self.quantidade}'
-
 class EstoqueService(estoque_pb2_grpc.EstoqueServiceServicer):
     def __init__(self, stop_event):
         self.produtos = []
         self._stop_event = stop_event
        
     def AdicionaProduto(self, request, context):
-
 
         for produto in self.produtos:
             if produto.descricao == request.descricao:
