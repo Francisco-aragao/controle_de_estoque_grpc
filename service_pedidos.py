@@ -33,50 +33,54 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
 
         lista = pedidos_pb2.ListaIdStatus()
         
-        id = 0
-        if len(self.pedidos) == 0:
-            id = 1
-        else: 
-            id = self.pedidos[-1].prod_id + 1
+        id = len(self.pedidos) + 1
 
-        novo_pedido = Pedido(id)
+        novo_pedido : Pedido = Pedido(id)
 
         for item in request.itens:
 
             prod_id = item.prod_id
 
             # valor negativo pois estou retirando do estoque
-            status = self.rpc_estoque.AlteraQuantidadeDeProduto(estoque_pb2.AlteraQuantidadeRequest(prod_id=prod_id, valor=-item.quantidade))
+            response = self.rpc_estoque.AlteraQuantidadeDeProduto(estoque_pb2.AlteraQuantidadeRequest(prod_id=prod_id, valor=-item.quantidade))
+            
+            status = response.status
+            if status >= 0:
+                status = 0 # operação bem sucedida
+                novo_pedido.AddProduto(prod_id, status, item.quantidade)
+                self.pedidos.append(novo_pedido)
 
             p = lista.par.add()
-            p.prod_id = prod_id
+            p.pedido_id = id
             p.status = status
 
-            novo_pedido.AddProduto(prod_id, status, item.quantidade)
-           
-        self.pedidos.append(novo_pedido)
-        
         return lista
    
     def CancelaPedido(self, request, context):
         
         if len(self.pedidos) < request.id:
-            return pedidos_pb2.Status(status=-1)
+            return pedidos_pb2.StatusPedidos(status=-1)
         
         pedido_removido = self.pedidos.pop(request.id - 1)
+
+        print("Pedido removido: ", pedido_removido.produtos)
 
         for prod_id, status, quantidade in pedido_removido.produtos:
                
             if status != 0:
                 continue
 
-            self.rpc_estoque.AlteraQuantidadeDeProduto(self.rpc_estoque.AlteraQuantidadeRequest(prod_id=prod_id, valor=quantidade))
+            self.rpc_estoque.AlteraQuantidadeDeProduto(estoque_pb2.AlteraQuantidadeRequest(prod_id=prod_id, valor=quantidade))
 
-        return pedidos_pb2.Status(status=0)
+        return pedidos_pb2.StatusPedidos(status=0)
 
-    """ def FimDaExecucao(self, request, context):
+    def FimDaExecucao(self, request, context):
+        response = self.rpc_estoque.FimDaExecucao(estoque_pb2.EmptyRequest())
         self._stop_event.set()
-        return pedidos_pb2.Status(status=len(self.produtos)) """
+
+
+
+        return pedidos_pb2.FimExecucaoStatus(estoque_status=response.status, pedidos_ativos=len(self.pedidos))
        
 
     

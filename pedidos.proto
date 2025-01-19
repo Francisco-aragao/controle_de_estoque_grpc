@@ -24,7 +24,7 @@ message ListaIdStatus {
 }
 
 message IdStatus {
-  int32 prod_id = 1;
+  int32 pedido_id = 1;
   int32 status = 2;
 }
 

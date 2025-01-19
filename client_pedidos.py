@@ -5,7 +5,7 @@ import sys
 import estoque_pb2, estoque_pb2_grpc, pedidos_pb2, pedidos_pb2_grpc
 
 
-def CriaPedido(stubEstoque, stubPedidos, lista_itens):
+def CriaPedido(stubPedidos, lista_itens):
     
     lista_itens_pedidos = pedidos_pb2.ListaDeItens()
 
@@ -14,16 +14,26 @@ def CriaPedido(stubEstoque, stubPedidos, lista_itens):
         item_pedido.prod_id = item[0]
         item_pedido.quantidade = item[1]
     
-    pedido = stubPedidos.CriaPedido(lista_itens_pedidos)
+    response = stubPedidos.CriaPedido(lista_itens_pedidos)
 
-    for item in pedido.par:
-        print(f'{item.prod_id} {item.status.status}')
-
-
+    for item in response.par:
+        print(f'{item.pedido_id} {item.status}')
 
 
-def processa_comandos(stubEstoque, stubPedidos):
-    commands = ['P', 'Q', 'L', 'F']
+def CancelaPedido(stubPedidos, pedido_id):
+
+    response = stubPedidos.CancelaPedido(pedidos_pb2.PedidoId(id=pedido_id))
+
+    print(response.status)
+  
+def FimDaExecucao(stubPedidos):
+    response = stubPedidos.FimDaExecucao(pedidos_pb2.Empty())
+
+    print(f'{response.estoque_status} {response.pedidos_ativos}')
+
+
+def processa_comandos(stubPedidos):
+    commands = ['P', 'X', 'F']
 
     for line in sys.stdin:
         if not line or not line.strip() or line[0] not in commands:
@@ -36,9 +46,13 @@ def processa_comandos(stubEstoque, stubPedidos):
             lista_itens = []
             for i in range(0, len(args), 2):
                 lista_itens.append((int(args[i]), int(args[i+1])))
-
-            print(lista_itens)
-            CriaPedido(stubEstoque, stubPedidos, lista_itens)
+        
+            CriaPedido(stubPedidos, lista_itens)
+        elif operacao == 'X':
+            CancelaPedido(stubPedidos, int(args[0]))
+        elif operacao == 'F':
+            FimDaExecucao(stubPedidos)
+            break
                 
 
 def client_pedidos():
@@ -50,7 +64,7 @@ def client_pedidos():
     channel = grpc.insecure_channel(servidorPedidos)
     stubPedidos = pedidos_pb2_grpc.PedidosServiceStub(channel)
 
-    processa_comandos(stubEstoque, stubPedidos)
+    processa_comandos(stubPedidos)
     
     channel.close()
 
