@@ -2,9 +2,9 @@ syntax = "proto3";
 
 service EstoqueService {
   rpc AdicionaProduto (ProdutoRequest) returns (ProdutoId);
-  rpc AlteraQuantidadeDeProduto (AlteraQuantidadeRequest) returns (Status);
+  rpc AlteraQuantidadeDeProduto (AlteraQuantidadeRequest) returns (StatusEstoque);
   rpc ListaProdutos (EmptyRequest) returns (ListaDeProdutos);
-  rpc FimDaExecucao (EmptyRequest) returns (Status);
+  rpc FimDaExecucao (EmptyRequest) returns (StatusEstoque);
 }
 
 message ProdutoRequest {
@@ -21,7 +21,7 @@ message AlteraQuantidadeRequest {
   int32 valor = 2;
 }
 
-message Status {
+message StatusEstoque {
   int32 status = 1;
 }
 

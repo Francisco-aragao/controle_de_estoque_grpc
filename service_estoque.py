@@ -37,17 +37,17 @@ class EstoqueService(estoque_pb2_grpc.EstoqueServiceServicer):
     def AlteraQuantidadeDeProduto(self, request, context):
 
         if len(self.produtos) < request.prod_id:
-            return estoque_pb2.Status(status=-2)
+            return estoque_pb2.StatusEstoque(status=-2)
         
         print(self.produtos[request.prod_id - 1].quantidade)
         print(request.valor)
 
         if (self.produtos[request.prod_id - 1].quantidade + request.valor ) < 0:
-            return estoque_pb2.Status(status=-1)
+            return estoque_pb2.StatusEstoque(status=-1)
         
         self.produtos[request.prod_id - 1].quantidade += request.valor
 
-        return estoque_pb2.Status(status=self.produtos[request.prod_id - 1].quantidade)
+        return estoque_pb2.StatusEstoque(status=self.produtos[request.prod_id - 1].quantidade)
 
     def ListaProdutos(self, request, context):
         lista = estoque_pb2.ListaDeProdutos()
@@ -62,7 +62,7 @@ class EstoqueService(estoque_pb2_grpc.EstoqueServiceServicer):
     
     def FimDaExecucao(self, request, context):
         self._stop_event.set()
-        return estoque_pb2.Status(status=len(self.produtos))
+        return estoque_pb2.StatusEstoque(status=len(self.produtos))
     
 def service_estoque():
     port = sys.argv[1]

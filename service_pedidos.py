@@ -37,7 +37,7 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
         if len(self.pedidos) == 0:
             id = 1
         else: 
-            id = self.pedidos[-1].id + 1
+            id = self.pedidos[-1].prod_id + 1
 
         novo_pedido = Pedido(id)
 
@@ -46,10 +46,10 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
             prod_id = item.prod_id
 
             # valor negativo pois estou retirando do estoque
-            status = self.rpc_estoque.AlteraQuantidadeDeProduto(self.rpc_estoque.AlteraQuantidadeRequest(prod_id=prod_id, valor=-item.quantidade))
+            status = self.rpc_estoque.AlteraQuantidadeDeProduto(estoque_pb2.AlteraQuantidadeRequest(prod_id=prod_id, valor=-item.quantidade))
 
             p = lista.par.add()
-            p.id = prod_id
+            p.prod_id = prod_id
             p.status = status
 
             novo_pedido.AddProduto(prod_id, status, item.quantidade)
@@ -74,9 +74,9 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
 
         return pedidos_pb2.Status(status=0)
 
-    def FimDaExecucao(self, request, context):
+    """ def FimDaExecucao(self, request, context):
         self._stop_event.set()
-        return pedidos_pb2.Status(status=len(self.produtos))
+        return pedidos_pb2.Status(status=len(self.produtos)) """
        
 
     
