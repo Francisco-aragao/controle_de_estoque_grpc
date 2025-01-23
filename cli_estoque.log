@@ -1,0 +1,16 @@
+python3 client_estoque.py localhost:12345
+1
+2
+2
+3
+1 10 produto1
+2 30 produto2
+3 5 produto 3 com espaço
+13
+27
+-2
+-1
+1 13 produto1
+2 27 produto2
+3 5 produto 3 com espaço
+3
