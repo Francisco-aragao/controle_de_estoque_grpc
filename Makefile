@@ -21,13 +21,13 @@ stub_pedidos:
 stubs: stub_estoque stub_pedidos
 
 run_serv_estoque: stubs
-	python3 service_estoque.py $(arg1)
+	@python3 service_estoque.py $(arg1)
 
 run_cli_estoque: stubs
-	python3 client_estoque.py $(arg1)
+	@python3 client_estoque.py $(arg1)
 
 run_serv_pedidos: stubs
-	python3 service_pedidos.py $(arg1) $(arg2)
+	@python3 service_pedidos.py $(arg1) $(arg2)
 
 run_cli_pedidos: stubs
-	python3 client_pedidos.py $(arg1) $(arg2)
+	@python3 client_pedidos.py $(arg1) $(arg2)

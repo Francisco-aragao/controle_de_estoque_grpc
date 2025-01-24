@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rpedidos.proto\"$\n\x0cListaDeItens\x12\x14\n\x05itens\x18\x01 \x03(\x0b\x32\x05.Item\"+\n\x04Item\x12\x0f\n\x07prod_id\x18\x01 \x01(\x05\x12\x12\n\nquantidade\x18\x02 \x01(\x05\"\x16\n\x08PedidoId\x12\n\n\x02id\x18\x01 \x01(\x05\"\'\n\rListaIdStatus\x12\x16\n\x03par\x18\x01 \x03(\x0b\x32\t.IdStatus\"-\n\x08IdStatus\x12\x11\n\tpedido_id\x18\x01 \x01(\x05\x12\x0e\n\x06status\x18\x02 \x01(\x05\"C\n\x11\x46imExecucaoStatus\x12\x16\n\x0e\x65stoque_status\x18\x01 \x01(\x05\x12\x16\n\x0epedidos_ativos\x18\x02 \x01(\x05\"\x1f\n\rStatusPedidos\x12\x0e\n\x06status\x18\x01 \x01(\x05\"\x07\n\x05\x45mpty2\x96\x01\n\x0ePedidosService\x12+\n\nCriaPedido\x12\r.ListaDeItens\x1a\x0e.ListaIdStatus\x12*\n\rCancelaPedido\x12\t.PedidoId\x1a\x0e.StatusPedidos\x12+\n\rFimDaExecucao\x12\x06.Empty\x1a\x12.FimExecucaoStatusb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rpedidos.proto\"$\n\x0cListaDeItens\x12\x14\n\x05itens\x18\x01 \x03(\x0b\x32\x05.Item\"+\n\x04Item\x12\x0f\n\x07prod_id\x18\x01 \x01(\x05\x12\x12\n\nquantidade\x18\x02 \x01(\x05\"\x16\n\x08PedidoId\x12\n\n\x02id\x18\x01 \x01(\x05\"\'\n\rListaIdStatus\x12\x16\n\x03par\x18\x01 \x03(\x0b\x32\t.IdStatus\"+\n\x08IdStatus\x12\x0f\n\x07prod_id\x18\x01 \x01(\x05\x12\x0e\n\x06status\x18\x02 \x01(\x05\"C\n\x11\x46imExecucaoStatus\x12\x16\n\x0e\x65stoque_status\x18\x01 \x01(\x05\x12\x16\n\x0epedidos_ativos\x18\x02 \x01(\x05\"\x1f\n\rStatusPedidos\x12\x0e\n\x06status\x18\x01 \x01(\x05\"\x07\n\x05\x45mpty2\x96\x01\n\x0ePedidosService\x12+\n\nCriaPedido\x12\r.ListaDeItens\x1a\x0e.ListaIdStatus\x12*\n\rCancelaPedido\x12\t.PedidoId\x1a\x0e.StatusPedidos\x12+\n\rFimDaExecucao\x12\x06.Empty\x1a\x12.FimExecucaoStatusb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -40,13 +40,13 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_LISTAIDSTATUS']._serialized_start=124
   _globals['_LISTAIDSTATUS']._serialized_end=163
   _globals['_IDSTATUS']._serialized_start=165
-  _globals['_IDSTATUS']._serialized_end=210
-  _globals['_FIMEXECUCAOSTATUS']._serialized_start=212
-  _globals['_FIMEXECUCAOSTATUS']._serialized_end=279
-  _globals['_STATUSPEDIDOS']._serialized_start=281
-  _globals['_STATUSPEDIDOS']._serialized_end=312
-  _globals['_EMPTY']._serialized_start=314
-  _globals['_EMPTY']._serialized_end=321
-  _globals['_PEDIDOSSERVICE']._serialized_start=324
-  _globals['_PEDIDOSSERVICE']._serialized_end=474
+  _globals['_IDSTATUS']._serialized_end=208
+  _globals['_FIMEXECUCAOSTATUS']._serialized_start=210
+  _globals['_FIMEXECUCAOSTATUS']._serialized_end=277
+  _globals['_STATUSPEDIDOS']._serialized_start=279
+  _globals['_STATUSPEDIDOS']._serialized_end=310
+  _globals['_EMPTY']._serialized_start=312
+  _globals['_EMPTY']._serialized_end=319
+  _globals['_PEDIDOSSERVICE']._serialized_start=322
+  _globals['_PEDIDOSSERVICE']._serialized_end=472
 # @@protoc_insertion_point(module_scope)

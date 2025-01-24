@@ -43,6 +43,8 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
     def CriaPedido(self, request, context):
         """
         Cria um pedido, adicionando os produtos ao pedido e retirando do estoque.
+
+        IMPORTANTE: Considero um pedido válido se pelo menos um dos produtos teve sucesso na operação de retirada do estoque. Posso ter uma lista de pedidos com vários produtos invalidos, tendo apenas um válido eu considero que o pedido foi válido e adiciono na lista interna de gerenciamento dos pedidos.
         """
 
         lista = pedidos_pb2.ListaIdStatus()
@@ -72,7 +74,7 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
                 novo_pedido.AddProduto(produto)
 
             p = lista.par.add()
-            p.pedido_id = id
+            p.prod_id = prod_id
             p.status = status
 
         if novo_pedido.produtos:
@@ -91,11 +93,12 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
         pedido_removido = self.pedidos.pop(request.id - 1)
 
         for produto in pedido_removido.produtos:
-
+               
             # ignoro produtos que não foram bem sucessidos (teoricamente não deveria acontecer esse caso pois já verifco em CriaPedido, mas deixei por garantia)
-            if produto.status != 0:
+            if produto.status < 0:
                 continue
-
+                
+            print("Foi")
             self.rpc_estoque.AlteraQuantidadeDeProduto(
                 estoque_pb2.AlteraQuantidadeRequest(
                     prod_id=produto.produto_id, valor=produto.quantidade
