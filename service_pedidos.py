@@ -47,9 +47,14 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
         IMPORTANTE: Considero um pedido válido se pelo menos um dos produtos teve sucesso na operação de retirada do estoque. Posso ter uma lista de pedidos com vários produtos invalidos, tendo apenas um válido eu considero que o pedido foi válido e adiciono na lista interna de gerenciamento dos pedidos.
         """
 
+        # criando lista conforme definição no arquivo proto
         lista = pedidos_pb2.ListaIdStatus()
 
-        id = len(self.pedidos) + 1
+        # achando o novo id com base nos anteriores
+        if len(self.pedidos) == 0:
+            id = 1
+        else:
+            id = self.pedidos[-1].id + 1
 
         novo_pedido: Pedido = Pedido(id)
 
@@ -72,7 +77,8 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
             if status >= 0:
                 status = 0  # operação bem sucedida
                 novo_pedido.AddProduto(produto)
-
+            
+            # adicionando produto na lista de resposta
             p = lista.par.add()
             p.prod_id = prod_id
             p.status = status
@@ -87,10 +93,20 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
         Cancela um pedido, retornando os produtos que foram reservados anteriormente ao estoque.
         """
 
-        if len(self.pedidos) < request.id:
+        # verifico se o pedido existe para ser removido
+        if len(self.pedidos) == 0 or self.pedidos[-1].id < request.id:
             return pedidos_pb2.StatusPedidos(status=-1)
 
-        pedido_removido = self.pedidos.pop(request.id - 1)
+        index_pedido_removido = -1
+        for i, pedido in enumerate(self.pedidos):
+            if pedido.id == request.id:
+                index_pedido_removido = i
+                break
+        
+        if index_pedido_removido == -1:
+            return pedidos_pb2.StatusPedidos(status=-1)
+
+        pedido_removido = self.pedidos.pop(index_pedido_removido)
 
         for produto in pedido_removido.produtos:
                
@@ -98,7 +114,6 @@ class PedidosService(pedidos_pb2_grpc.PedidosServiceServicer):
             if produto.status < 0:
                 continue
                 
-            print("Foi")
             self.rpc_estoque.AlteraQuantidadeDeProduto(
                 estoque_pb2.AlteraQuantidadeRequest(
                     prod_id=produto.produto_id, valor=produto.quantidade

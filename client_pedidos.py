@@ -34,6 +34,7 @@ class PedidosClient:
         self.stub = pedidos_pb2_grpc.PedidosServiceStub(self.channel)
 
     def CriaPedido(self, lista_itens):
+        # criando lista conforme definição no arquivo proto
         lista_itens_pedidos = pedidos_pb2.ListaDeItens()
 
         for item in lista_itens:

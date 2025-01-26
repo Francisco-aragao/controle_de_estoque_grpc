@@ -34,6 +34,7 @@ class EstoqueService(estoque_pb2_grpc.EstoqueServiceServicer):
                 produto.quantidade += request.quantidade
                 return estoque_pb2.ProdutoId(id=produto.id)
 
+        # achando o novo id com base nos anteriores
         id = 0
         if len(self.produtos) == 0:
             id = 1
